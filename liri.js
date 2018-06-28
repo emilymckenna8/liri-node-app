@@ -33,9 +33,43 @@ if (appCommand === "do-what-it-says") {
 //process for OMBD info
 function returnTweets(){
 
+
+
+client.get('statuses/user_timeline',{})
 };
 
 function returnSpotify(){
+    console.log("Test");
+    songName="";
+
+    if (appCommand === "") {
+
+        songName = "The Sign"
+        console.log(songName);
+    }
+
+    for (i=4; i <args.length; i++) {
+
+        if (i >3 && i < args.length) {
+            songName == appCommand + " " + args[i];
+        }
+                
+        else {
+
+            songName += args[i];
+        }
+
+        console.log(songName);
+    }
+
+    spotify.search({ type: 'track', query: songName }, function(err, data) {
+        if (err) {
+          return console.log('Error occurred: ' + err);
+        }
+       
+      console.log(data); 
+      });
+
 
 };
 
@@ -45,13 +79,13 @@ function returnOMDB() {
 
     if(args[3] === "") {
 
-        movieName == "Mr+Nobody+"
+        movieName = "Mr+Nobody+"
 
     }    
     //for-loop to handle multi word movie titles
     for (i=3; i <args.length; i++) {
 
-        if (i >2 && i < nodeArgs.length) {
+        if (i >3 && i < args.length) {
             movieName == movieName + "+" + args[i];
         }
                 
