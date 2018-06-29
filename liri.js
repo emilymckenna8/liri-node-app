@@ -8,15 +8,16 @@ var Twitter = require("twitter");
 var Spotify = require("node-spotify-api");
 var spotifyKey = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
-
+var params = {screen_name: "Emily McKenna", count: 20};
 
 //takes in the command from LIRI which tells the app what to do
 var args = process.argv;
 var appCommand = args[2];
 var userSearch = "";
+//allow search to handle spaces
 for (i = 3; i<args.length; i++) {
     userSearch += args[i] + " ";}
-
+//sets action for command
 if (appCommand === "my-tweets") {
     returnTweets();
 }
@@ -33,22 +34,28 @@ if (appCommand === "do-what-it-says") {
     randomRequest();
 }
 
-
-//process for OMBD info
+//twitter function
 function returnTweets(){
 
+    client.get('statuses/user_timeline', params, function(error, tweets, response){
 
+        for (i = 0; i<tweets.length; i++){
+            console.log("Most Recent 20 Tweets")
+            console.log(tweets[i].text);
+            console.log(tweets[i].created_at);
 
-client.get('statuses/user_timeline',{})
+        }
+    })
 };
 
+//spotify function
 function returnSpotify(song){
     console.log("Test");
     songName="";
 
-    if (appCommand === "") {
+    if (song === "") {
 
-        songName = "The Sign"
+        songName = "The Sign Ace of Base"
         console.log(songName);
     }
 
@@ -61,15 +68,26 @@ function returnSpotify(song){
         if (err) {
           return console.log('Error occurred: ' + err);
         }
-       
-      console.log(data.tracks); 
+   
+      songData = data.tracks.items[0];
+
+      //console.log(songData);
+      console.log("Artist: " +songData.artists[0].name);
+      console.log("Track Title: "+songData.name);
+      console.log("Sample: "+songData.external_urls.spotify);
+      console.log("Album: "+songData.album.name)
+        
+
+
       });
 
 
 };
 
+//OMDB function
+
 function returnOMDB(movie) {
-    //empty variable for movie name
+    
     var movieName = "";
 
     if(movie === "") {
