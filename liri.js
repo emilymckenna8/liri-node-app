@@ -110,6 +110,22 @@ function returnOMDB(movie) {
 
 
 function randomRequest(){
+    fs.readFile("./random.txt","utf8",function(error, data) {
+        if (error) {
+            console.log(error);
+        }
 
+        else {
+            var randomData = data.split(",");
+            if (randomData[0] === "spotify-this-song") {
+                returnSpotify(randomData[1]);
+                
+            }
+            if (randomData[0] === "movie-this"){
+                returnOMDB(randomData[1]);
+            }
+
+        };
+    });
 }
 
