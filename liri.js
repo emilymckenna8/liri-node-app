@@ -4,25 +4,29 @@ require("dotenv").config();
 var request = require("request");
 var keys = require('./keys');
 var fs = require('fs');
-var spotify = new Spotify(keys.spotify);
+var Twitter = require("twitter");
+var Spotify = require("node-spotify-api");
+var spotifyKey = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
 
 //takes in the command from LIRI which tells the app what to do
 var args = process.argv;
 var appCommand = args[2];
-var userSearch = args[3];
+var userSearch = "";
+for (i = 3; i<args.length; i++) {
+    userSearch += args[i] + " ";}
 
 if (appCommand === "my-tweets") {
     returnTweets();
 }
 
 if (appCommand === "spotify-this-song") {
-    returnSpotify();
+    returnSpotify(userSearch);
 }
 
 if (appCommand === "movie-this") {
-    returnOMDB();
+    returnOMDB(userSearch);
 }
 
 if (appCommand === "do-what-it-says") {
@@ -38,7 +42,7 @@ function returnTweets(){
 client.get('statuses/user_timeline',{})
 };
 
-function returnSpotify(){
+function returnSpotify(song){
     console.log("Test");
     songName="";
 
@@ -48,58 +52,46 @@ function returnSpotify(){
         console.log(songName);
     }
 
-    for (i=4; i <args.length; i++) {
-
-        if (i >3 && i < args.length) {
-            songName == appCommand + " " + args[i];
-        }
-                
-        else {
-
-            songName += args[i];
-        }
-
-        console.log(songName);
+    else {
+        songName = song;
+        console.log(song)
     }
 
-    spotify.search({ type: 'track', query: songName }, function(err, data) {
+    spotifyKey.search({ type: 'track', query: songName }, function(err, data) {
         if (err) {
           return console.log('Error occurred: ' + err);
         }
        
-      console.log(data); 
+      console.log(data.tracks); 
       });
 
 
 };
 
-function returnOMDB() {
+function returnOMDB(movie) {
     //empty variable for movie name
     var movieName = "";
 
-    if(args[3] === "") {
+    if(movie === "") {
 
         movieName = "Mr+Nobody+"
 
-    }    
-    //for-loop to handle multi word movie titles
-    for (i=3; i <args.length; i++) {
+    } 
+    else {
+        movieName = movie
+    }   
 
-        if (i >3 && i < args.length) {
-            movieName == movieName + "+" + args[i];
-        }
-                
-        else {
+    movieName = movieName.split(" ").join("+");
 
-            movieName += args[i];
-        }
-    }
 
-    var querURL = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+    console.log(movieName)
+    
+
+    var queryURL = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
     console.log(queryURL);
 
-    request(queryUrl, function(error, response, body) {
+    request(queryURL, function(error, response, body) {
 
         if(!error && response.statusCode ===200) {
             console.log("Title: "+ JSON.parse(body).Title);
