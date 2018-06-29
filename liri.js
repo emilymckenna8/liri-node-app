@@ -58,18 +58,18 @@ function returnTweets(){
 
 //spotify function
 function returnSpotify(song){
-    console.log("Test");
+    
     songName="";
 
     if (song === "") {
 
         songName = "The Sign Ace of Base"
-        console.log(songName);
+        
     }
 
     else {
         songName = song;
-        console.log(song)
+        
     }
 
     spotifyKey.search({ type: 'track', query: songName }, function(err, data) {
@@ -109,12 +109,12 @@ function returnOMDB(movie) {
     movieName = movieName.split(" ").join("+");
 
 
-    console.log(movieName)
+    
     
 
     var queryURL = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
-    console.log(queryURL);
+    
 
     request(queryURL, function(error, response, body) {
         if (error){
