@@ -38,11 +38,19 @@ if (appCommand === "do-what-it-says") {
 function returnTweets(){
 
     client.get('statuses/user_timeline', params, function(error, tweets, response){
+        console.log("Most Recent 20 Tweets")
+        if (error) {
+            console.log("Error: "+ err)
+        }
 
-        for (i = 0; i<tweets.length; i++){
-            console.log("Most Recent 20 Tweets")
-            console.log(tweets[i].text);
-            console.log(tweets[i].created_at);
+        else {
+
+            for (i = 0; i<tweets.length; i++){
+                
+                console.log("Tweet:" + tweets[i].text);
+                console.log("Created at: " + tweets[i].created_at);
+
+            }
 
         }
     })
@@ -89,7 +97,6 @@ function returnSpotify(song){
 function returnOMDB(movie) {
     
     var movieName = "";
-
     if(movie === "") {
 
         movieName = "Mr+Nobody+"
@@ -110,7 +117,9 @@ function returnOMDB(movie) {
     console.log(queryURL);
 
     request(queryURL, function(error, response, body) {
-
+        if (error){
+            console.log("Error: "+error)
+        }
         if(!error && response.statusCode ===200) {
             console.log("Title: "+ JSON.parse(body).Title);
             console.log("Release Year: "+ JSON.parse(body).Released);
@@ -126,6 +135,7 @@ function returnOMDB(movie) {
 
 };
 
+//random function
 
 function randomRequest(){
     fs.readFile("./random.txt","utf8",function(error, data) {
